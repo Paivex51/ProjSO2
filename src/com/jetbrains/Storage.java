@@ -3,7 +3,11 @@ package com.jetbrains;
 public class Storage extends Sujeito{
 
     int iteration ;
-    long timeToSolution;
+    double timeToSolution;
+
+    public Storage(int maxC) {
+        super(maxC);
+    }
 
     public int getIteration() {
         return iteration;
@@ -13,11 +17,11 @@ public class Storage extends Sujeito{
         this.iteration = iteration;
     }
 
-    public long getTimeToSolution() {
+    public double getTimeToSolution() {
         return timeToSolution;
     }
 
-    public void setTimeToSolution(long timeToSolution) {
+    public void setTimeToSolution(double timeToSolution) {
         this.timeToSolution = timeToSolution;
     }
 

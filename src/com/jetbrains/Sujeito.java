@@ -10,11 +10,18 @@ public class Sujeito {
     private double cost;
     private int score;
 
-    public Sujeito(){
+    public void setMaxC(int maxC) {
+        this.maxC = maxC;
+    }
+
+    private int maxC;
+
+    public Sujeito(int maxC){
         this.pecas = new ArrayList<>();
         this.waste = new ArrayList<>();
         this.cost=69420.0;
         this.score=0;
+        this.maxC=maxC;
     }
 
     public Sujeito(Sujeito suj){
@@ -22,6 +29,7 @@ public class Sujeito {
         this.waste = suj.waste;
         this.cost = suj.cost;
         this.score = suj.score;
+        this.maxC = suj.maxC;
     }
 
     public void setPecas(List<Integer> pecas){
@@ -57,17 +65,17 @@ public class Sujeito {
         int c1=0;
         for (int i = 0; i<pecas.size();i++){
             c1+=pecas.get(i);
-            if(c1 > Main.maxC){
-                waste.add(Main.maxC-(c1-pecas.get(i)));
+            if(c1 > maxC){
+                waste.add(maxC-(c1-pecas.get(i)));
                 c1 = pecas.get(i);
             }
             if(i == pecas.size()-1){
-                if(c1 > Main.maxC){
-                    waste.add(Main.maxC-(c1-pecas.get(i)));
+                if(c1 > maxC){
+                    waste.add(maxC-(c1-pecas.get(i)));
                     c1 = pecas.get(i);
                     waste.add(c1);
                 }else {
-                    waste.add(Main.maxC-c1);
+                    waste.add(maxC-c1);
                 }
             }
         }
@@ -83,7 +91,7 @@ public class Sujeito {
             }else {
                 v = 0.0;
             }
-            val += Math.sqrt(((double)w/Main.maxC))+(v/n);
+            val += Math.sqrt(((double)w/maxC))+(v/n);
         }
         val = ((double)1/(n+1))*val;
         cost = val;
@@ -103,7 +111,7 @@ public class Sujeito {
         System.out.println("Waste: "+waste+ " Total Waste: "+getTotalWaste());
         System.out.println("Cuts: "+waste.size());
         System.out.println("Cost: "+cost);
-        System.out.println("Score: "+score);
+        //System.out.println("Score: "+score);
     }
 
     public void alg3PS() {
@@ -169,11 +177,11 @@ public class Sujeito {
             c1+=pecas.get(i);
             cut.add(i);
             if(i != pecas.size()-1){
-                if(c1 == Main.maxC){
+                if(c1 == maxC){
                     c1 = 0;
                     cut.clear();
                 }
-                if(c1 > Main.maxC){
+                if(c1 > maxC){
                     c1 = pecas.get(i);
                     cut.remove(cut.size()-1);
                     dividedList.add(new ArrayList<>(cut));
@@ -182,7 +190,7 @@ public class Sujeito {
                 }
             }
             if(i == pecas.size()-1){
-                if(c1 > Main.maxC){
+                if(c1 > maxC){
                     cut.remove(cut.size()-1);
                     dividedList.add(new ArrayList<>(cut));
                     cut.clear();

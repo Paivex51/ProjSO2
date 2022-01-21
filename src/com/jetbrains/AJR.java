@@ -7,21 +7,20 @@ public class AJR extends Thread{
     long start, end;
     Semaphore access;
     Storage storage;
-    int u, m, maxC, compare;
-    int[] u_m_maxC, compPecas, qtddPecas, iterations;
+    int u, m, maxC, compare, seconds;
+    int[] m_maxC, compPecas, qtddPecas, iterations;
     List<Sujeito> population;
     List<Sujeito> descendent;
-    public AJR(int[] u_m_maxC, int[] compPecas, int[] qtddPecas, int maxIterations, Storage storage, Semaphore access){
-        if(u_m_maxC.length!=3){
-            System.out.println("u_m_maxC.length != 3");
+    public AJR(int[] m_maxC, int[] compPecas, int[] qtddPecas, int seconds, int maxIterations, int pops, Storage storage, Semaphore access){
+        if(m_maxC.length!=2){
+            System.out.println("u_m_maxC.length != 2");
         }else{
-            u=u_m_maxC[0];
-            m=u_m_maxC[1];
-            maxC=u_m_maxC[2];
+            m=m_maxC[0];
+            maxC=m_maxC[1];
             if(compPecas.length!=m || qtddPecas.length != m){
                 System.out.println("compPecas & qtddPecas .length != m");
             }else{
-                this.u_m_maxC=u_m_maxC;
+                this.m_maxC=m_maxC;
                 this.compPecas=compPecas;
                 this.qtddPecas=qtddPecas;
             }
@@ -33,6 +32,8 @@ public class AJR extends Thread{
         }
         this.iterations = new int[]{maxIterations,1}; //[maxIteration, current]
         this.compare=10;
+        this.u=pops;
+        this.seconds=seconds;
         this.storage = storage;
         this.access = access;
         this.population = createPopulation();
@@ -48,12 +49,13 @@ public class AJR extends Thread{
 
     public void AJR_E(){
         start = System.currentTimeMillis();
+        end = start+(seconds*1000);
         do {
-            popAlg3PS();   // inclui as 2 funçoes acima
-            popCompare();  //inclui as 3 acima
+            popAlg3PS();
+            popCompare();
             updateStorage();
             iterations[1]++;
-        }while (iterations[0] > iterations[1]);
+        }while (iterations[0] > iterations[1] && System.currentTimeMillis() < end);
         //printInfo();
     }
 
@@ -119,13 +121,13 @@ public class AJR extends Thread{
             try {
                 access.acquire();
                 if(suj.isBetter() < storage.isBetter()){
-                    //System.out.println("Previous !!!!!!!!!!");
-                    //storage.printInfo();
+                    System.out.println("PREVIOUS RESULT!!!!!!!!!!");
+                    storage.printInfo();
                     storage.setPecas(new ArrayList<>(suj.getPecas()));
                     storage.calcCost();
                     storage.setIteration(iterations[1]);
-                    storage.setTimeToSolution(System.currentTimeMillis()-start);
-                    //System.out.println("NEW !!!!!!!!!!");
+                    storage.setTimeToSolution((double)(System.currentTimeMillis()-start)/1000);
+                    System.out.println("NEW RESULT!!!!!!!!!!");
                     storage.printInfo();
                 }
                 access.release();
@@ -145,7 +147,7 @@ public class AJR extends Thread{
             }
         }
         for (int w = u; w > 0; w--){
-            Sujeito suj = new Sujeito();
+            Sujeito suj = new Sujeito(maxC);
             suj.setPecas(new ArrayList<>(temp));
             suj.shufflePecas();
             pops.add(suj);
