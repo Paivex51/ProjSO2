@@ -87,9 +87,14 @@ public class Sujeito {
                 }
             }
         }
+        for (int i = 0; i < waste.size(); i++) {
+            if (waste.get(i) == null) {
+                calcWaste();
+            }
+        }
     }
 
-    public void calcCost() {
+    public synchronized void calcCost() {
         calcWaste();
         int n = waste.size();
         double val = 0.0, v = 0.0;

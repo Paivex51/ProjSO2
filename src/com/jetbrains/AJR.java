@@ -64,12 +64,12 @@ public class AJR extends Thread {
                 }
             } else {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
-        } while (iterations[0] > iterations[1] && System.currentTimeMillis() < end && storage.getTotalWaste()!=0);
+        } while (iterations[0] > iterations[1] && System.currentTimeMillis() < end && storage.getTotalWaste() != 0);
         while (stop) {
             try {
                 System.out.println("Waiting for last ADV...");
@@ -119,13 +119,18 @@ public class AJR extends Thread {
         if (descendent.size() == 0) {
             popAlg3PS();
         }
-        population.addAll(new ArrayList<>(descendent));
+        for (Sujeito suj : descendent) {
+            population.add(new Sujeito(suj));
+        }
+        //population.addAll(new ArrayList<>(descendent));
         descendent.clear();
         for (Sujeito suj : population) {
+            suj.calcCost();
+            suj.calcEval();
             suj.resetScore();
             for (int i = 0; i < compare; i++) {
                 int idx = (int) (Math.random() * population.size());
-                while (suj == population.get(idx)) {
+                while (suj.equals(population.get(idx))) {
                     idx = (int) (Math.random() * population.size());
                 }
                 if (suj.getCost() < population.get(idx).getCost()) {

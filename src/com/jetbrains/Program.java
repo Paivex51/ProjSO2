@@ -41,6 +41,7 @@ public class Program {
         }
         List<Integer> in = doReading();
         storage.setMaxC(arrayInfo.get(0)[1]);
+
         long start = System.currentTimeMillis();
         long end = start + ((in.get(1) + 2) * 1000);
         for (int i = 0; i < in.get(0); i++) {
@@ -50,7 +51,7 @@ public class Program {
             thread.start();
         }
         try {
-            while (end > System.currentTimeMillis() || alive) {
+            while (end > System.currentTimeMillis() && alive) {
                 for (AJR thread : threadList) {
                     if (!thread.isAlive()) {
                         alive = false;
@@ -58,7 +59,7 @@ public class Program {
                 }
                 TimeUnit.SECONDS.sleep(1);
             }
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -101,11 +102,10 @@ public class Program {
                     System.out.println("AJRADV canceled...");
                 } else {
                     System.out.println("Waiting for threads to stop...");
-                    //TimeUnit.SECONDS.sleep(1);
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(500);
                     System.out.println("Threads stopped...");
                     System.out.println("AJRADV started...");
-                    //applyADV(threadList, in);
+                    applyADV(threadList, in);
                     System.out.println("AJRADV ended...");
                     for (AJR thread : threadList) {
                         thread.setStop(false);
@@ -249,9 +249,9 @@ public class Program {
         }
         out.add(iterations);
         System.out.println("Population size: " +
-                "\nn<=0-> 75");
+                "\nn<10-> 75");
         int pops = sc.nextInt();
-        if (pops <= 0) {
+        if (pops < 10) {
             pops = 75;
         }
         out.add(pops);
