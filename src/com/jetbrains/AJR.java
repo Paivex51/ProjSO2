@@ -69,7 +69,7 @@ public class AJR extends Thread {
                     System.out.println(e);
                 }
             }
-        } while (iterations[0] > iterations[1] && System.currentTimeMillis() < end);
+        } while (iterations[0] > iterations[1] && System.currentTimeMillis() < end && storage.getTotalWaste()!=0);
         while (stop) {
             try {
                 System.out.println("Waiting for last ADV...");

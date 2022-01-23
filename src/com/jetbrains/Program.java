@@ -32,6 +32,8 @@ public class Program {
     }
 
     public void doAJR() {
+        boolean alive = true;
+        List<AJR> threadList = new ArrayList<>();
         List<int[]> arrayInfo = readFile();
         System.out.println("Values in use: ");
         for (int[] arr : arrayInfo) {
@@ -39,11 +41,24 @@ public class Program {
         }
         List<Integer> in = doReading();
         storage.setMaxC(arrayInfo.get(0)[1]);
+        long start = System.currentTimeMillis();
+        long end = start + ((in.get(1) + 2) * 1000);
         for (int i = 0; i < in.get(0); i++) {
-            new AJR(arrayInfo.get(0), arrayInfo.get(1), arrayInfo.get(2), in.get(1), in.get(2), in.get(3), storage, access).start();
+            threadList.add(new AJR(arrayInfo.get(0), arrayInfo.get(1), arrayInfo.get(2), in.get(1), in.get(2), in.get(3), storage, access));
+        }
+        for (AJR thread : threadList) {
+            thread.start();
         }
         try {
-            TimeUnit.SECONDS.sleep(in.get(1) + 2);
+            while (end > System.currentTimeMillis() || alive) {
+                for (AJR thread : threadList) {
+                    if (!thread.isAlive()) {
+                        alive = false;
+                    }
+                }
+                TimeUnit.SECONDS.sleep(1);
+            }
+            TimeUnit.SECONDS.sleep(2);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -71,7 +86,7 @@ public class Program {
         for (AJR thread : threadList) {
             thread.start();
         }
-        while (end > System.currentTimeMillis() && alive == true) {
+        while (end > System.currentTimeMillis() && alive) {
             try {
                 TimeUnit.SECONDS.sleep(interval);
                 System.out.println("////////////////////////////");
