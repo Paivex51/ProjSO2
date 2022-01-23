@@ -218,10 +218,10 @@ public class Program {
         }
         out.add(thread);
         System.out.println("How many seconds: " +
-                "\nn<=0 -> 10s");
+                "\nn<=0 -> 20s");
         int seconds = sc.nextInt();
         if (seconds <= 0) {
-            seconds = 10;
+            seconds = 20;
         }
         out.add(seconds);
         System.out.println("Max number of iterations per thread: " +
